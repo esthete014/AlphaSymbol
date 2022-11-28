@@ -1,4 +1,4 @@
-var alphabets = [
+let alphabets = [
 	{ string: '◼▩▨▦▥▣◫▢', name: 'Default' },
 	{ string: '◆▶◈◭◬◇▷', name: 'Triangle'},
 	{ string: '刺ぽをまちんのこ', name: 'Japan'},
@@ -20,16 +20,22 @@ let _globalPhoto;
 
 	
 
-var limit = 4000000;
-var maxWidth = 100;
-var maxHeight = 100;
+let limit = 4000000;
+let maxWidth = 100;
+let maxHeight = 100;
 
-var inputFile = document.querySelector('.inputBox');
-var preview = document.querySelector('.js-preview');
-var asciiImage = document.querySelector('.js-ascii-image');
+let inputFile = document.querySelector('.inputBox');
+let preview = document.querySelector('.js-preview');
+let asciiImage = document.querySelector('.js-ascii-image');
 let dropList = document.querySelector('.dropList');
 renderDropListAlphabets();
 dropList.onchange = onChangeDropList
+
+let btnCopy = document.querySelector('.copyBtn');
+btnCopy.addEventListener('click', () => {
+	const content = document.querySelector('.js-ascii-image');
+  	getScreenshotOfElement(content);
+}) 
 
 let inputs = document.querySelectorAll('.input__file');
 Array.prototype.forEach.call(inputs, function (input) {
@@ -59,58 +65,40 @@ function drawAsciiImage(colors, params, hexColors){
 
 	// если изображение больше maxWidth * maxHeight px, то не рисуем каждый пиксель,
 	// а рисуем с шагом ratioWidth (ratioHeight)
-	var ratioWidth = Math.ceil(width / maxWidth);
-	var ratioHeight = Math.ceil(width / maxHeight);
+	let ratioWidth = Math.ceil(width / maxWidth);
+	let ratioHeight = Math.ceil(width / maxHeight);
 
-	//var str = '<font color="#fa8e47"</font>';
-	//var str = '<font color="#fa8e47"</font>';
 	let str = '' ;
 	let hex;
 	let counter = 0;
-	for(var i = 0; i < height; i += ratioHeight) {
-		var row = colors[i];
+	for(let i = 0; i < height; i += ratioHeight) {
+		let row = colors[i];
 		hex = hexColors[i];
-		//console.log(row);
-		for(var j = 0; j < width; j += ratioWidth) {
-			var color = row[j];
-			var symbol = ASCIIColors[color > 0 ? Math.ceil(color / 255 * ASCIIColors.length) - 1 : 0];
-			//str += `<font color="${hex}"</font>`;
+		for(let j = 0; j < width; j += ratioWidth) {
+			let color = row[j];
+			let symbol = ASCIIColors[color > 0 ? Math.ceil(color / 255 * ASCIIColors.length) - 1 : 0];
 			str += `<mark class='Symbol_${counter}' >${symbol}</mark>`; //style="background: white"
 			counter++;
-			//str += `<mark class='Symbol_${counter}' style = "background: #${hexColors[i]}">${symbol}</mark>`;
-			//counter++;
-			//asciiImage.innerHTML = asciiImage.innerHTML + str;
-			//str = '';
 		}
-		//console.log(hex);
 		str += `<br>`;
 	}
 
 	asciiImage.innerHTML = str;
-	//console.log(document.querySelector(`body`).style.background = '#00ced1');
-	//console.log(document.getElementsByClassName(`Symbol_${1}`).style = "background: #00ced1");
-	//document.querySelector(`.Symbol_${1}`).style.color = hexColors[1];
-	//console.log(document.querySelector(`.Symbol_${1}`));
 	let c = 0;
 
-	for(var i = 0; i < height; i += ratioHeight) {
-		for(var j = 0; j < width; j += ratioWidth) {
+	for(let i = 0; i < height; i += ratioHeight) {
+		for(let j = 0; j < width; j += ratioWidth) {
 			let char = document.querySelector(`.Symbol_${c}`);
 			c++;
 			char.style = `background: #010010; color: #${hexColors[i][j]}`; // char.style = `background: #${hexColors[i][j]}; color: #${hexColors[i][j]}`; // `background: white; color: #${hexColors[i][j]}`
-			//console.log(char);
-		//console.log(char);
-		// let char = document.querySelector(`.Symbol_${counter}`);
-		// console.log(char);
-		//char.style.background = hexColors[i];
 		}
 	}
 	//console.log(hexColors);
 }
 
 // попиксельно парсим изображение, переводим все цвета в градации серого
-var getPixelsColorCode = function(imageBase64) {
-	var image = new Image();
+let getPixelsColorCode = function(imageBase64) {
+	let image = new Image();
 
 	image.src = imageBase64;
 
@@ -120,34 +108,31 @@ var getPixelsColorCode = function(imageBase64) {
 			return false;
 		}
 
-		var canvas = document.createElement('canvas');
-		var context = canvas.getContext('2d');
-		var width = this.width;
-		var height = this.height;
+		let canvas = document.createElement('canvas');
+		let context = canvas.getContext('2d');
+		let width = this.width;
+		let height = this.height;
 
 		canvas.width = width;
 		canvas.height = height;
 
 		context.drawImage(this, 0, 0);
 
-		var imageData = context.getImageData(0, 0, width, height);
-		var pixels = imageData.data;
-		//console.log(pixels);
+		let imageData = context.getImageData(0, 0, width, height);
+		let pixels = imageData.data;
 		// каждый пиксел предствлен 4-мя значениями, например [... , 34, 136, 204, 255, ...];
 		// используя первые три значения, получаем нужный оттенок серого цвета
 		// и записываем значение в двумерный массив
 		let pixelMatrix = [];
 		let pixelMatrixColor = [];
-		var row = 0;
+		let row = 0;
 		pixelMatrix[0] = [];
 		pixelMatrixColor[0] = [];
-		for(var i = 0; i < pixels.length; i += 4) {
+		for(let i = 0; i < pixels.length; i += 4) {
 			if ( (i / (row + 1)) >= (width * 4) ) {
 				pixelMatrix[++row] = [];
 				pixelMatrixColor[row] = [];
 			}
-			//test(`rgba(${pixels[i]}, ${pixels[i + 1]}, ${pixels[i + 2]}, ${pixels[i + 3]})`);
-			//pixelMatrixColor[row].push(argbToRGB(`rgba(${i}, ${i + 1}, ${i + 2}, ${i + 3})`));
 			let brightness = 255;
 			// пиксель не полностью прозрачный
 			if (pixels[i + 3] !== 0) {
@@ -160,18 +145,13 @@ var getPixelsColorCode = function(imageBase64) {
 		}
 
 		drawAsciiImage(pixelMatrix, {width: width, height: height}, pixelMatrixColor);
-		//srceenshot
-		const content = document.querySelector('.js-ascii-image');
-  		getScreenshotOfElement(content);
-		
-		//console.log(div);
 	});
 };
 
 // кодируем изображение в Base64 и загружаем его превью
 function previewImage() {
-	var file = inputFile.files[0];
-	var reader = new FileReader();
+	let file = inputFile.files[0];
+	let reader = new FileReader();
 
 	reader.onloadend = function() {
 		if (!file.type.includes("image", 0)) {
@@ -212,25 +192,31 @@ function renderDropListAlphabets() {
 }
 
 const getScreenshotOfElement = async (element) => {
-	//const _image = await html2canvas(element).then(canvas => canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]))).then(alert("Screenshot"));
-	await html2canvas(element).then(canvas => canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]))).then(c => alert("Screenshot complete"));
-	
-	//document.body.appendChild(_image)
-	//html2canvas(document.querySelector("#copyToImage")).then(canvas => canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})])));
+	try {
+		let screenshotDOMElementGraphic = await html2canvas(element).then(console.log("Complete"))
+		copyToClipboard(screenshotDOMElementGraphic);
+	}	catch(e) {
+		console.log(e);
+	}
 }
 
-function argbToRGB(argb) {
-	//return '#' + argb.match(/[0-9|.]+/g).map((x,i) => i === 3 ? parseInt(255 * parseFloat(x)).toString(16) : parseInt(x).toString(16)).join('')
-
-	//return "#00" + argb[1].toString(16) + argb[2].toString(16) + argb[3].toString(16);
-	//return ((parseInt(argb,10)) & 0x00FFFFFF).toString(16);
-	//let str = '#00';
-	//str += (parseInt(num,10)) & 0x00FFFFFF;
-    return "#" + argb.toString(16).padStart(6, '0');
+async function copyToClipboard(src) {
+	await src.toBlob(blob => {
+			try {
+				navigator.clipboard.write([
+					new ClipboardItem({
+						[blob.type] : blob,
+					})
+				]).then(console.log("Copy"));
+			} catch(e) {
+				console.log(e);
+			}
+		}
+	);
 }
 
 function rgba2hex(orig) {
-	var a, isPercent,
+	let a, isPercent,
 	  rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+),?([^,\s)]+)?/i),
 	  alpha = (rgb && rgb[4] || "").trim(),
 	  hex = rgb ?
@@ -253,8 +239,3 @@ function rgba2hex(orig) {
   function test(colorcode) {
 	console.log(colorcode, rgba2hex(colorcode));
   }
-
-
-  //let body = document.querySelector('body').style.background = '#' + rgba2hex('rgba(111, 222, 333, 255)');
-  //console.log(body);
-  //test("rgba(0, 255, 0, 0.5)");
