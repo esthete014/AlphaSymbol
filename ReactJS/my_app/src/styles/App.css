@@ -1,0 +1,90 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .copyBTN:hover {
+    animation: spin infinite 1.5s linear reverse;
+  }
+}
+.body {
+  background: #282c34;
+}
+.bx {
+  background-color: #282c34;
+}
+
+.leftBox {
+  background-color: #282c34;
+  box-shadow: 0px;
+  /* border-radius: 20px; */
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: #282c34;
+}
+
+.previewIMG {
+  object-fit: contain;
+}
+
+.ascii {
+  height: auto;
+  width: auto;
+  color: black;
+  font: 8px/0.7 monospace;
+  text-align: center;
+  align-self: auto;
+  margin: 0;
+  background-color: #282c34;
+  margin-bottom: 10%;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+::-webkit-scrollbar-track
+{
+  z-index: 0;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: transparent;
+  color: transparent;
+}
+
+::-webkit-scrollbar
+{
+  z-index: 0;
+  width: 12px;
+  background-color: #282c34;
+}
+
+::-webkit-scrollbar-thumb
+{
+  z-index: 0;
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #1976d284;
+}
